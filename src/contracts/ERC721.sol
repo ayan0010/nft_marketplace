@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.22 <0.9.0;
+pragma solidity ^0.8.0;
 
 contract ERC721{
     
@@ -14,14 +14,13 @@ contract ERC721{
         c.keep track of token owners address to token id mapping
         d.keep track of how many tokens are owned by an address 
         e.create an event that emits a transfer log (contract address, from, to, token id)
-
         requirements--
         1.require that the minting address isnt 0
         2.require that the token has not been minted before
     */
  
- mapping(uint256 => address) public _tokenOwner;
- mapping(address => uint256[]) public _OwnedTokensCount;
+ mapping(uint256 => address) private _tokenOwner;
+ mapping(address => uint256) private _OwnedTokensCount;
 
  function _exists(uint256 tokenId) internal view returns(bool){
     address owner = _tokenOwner[tokenId];
@@ -34,8 +33,8 @@ contract ERC721{
      require(!_exists(tokenId)); //should be false
     //who owns which token 
        _tokenOwner[tokenId] = to;
-        _ownedTokensCount[to]++;
+        _OwnedTokensCount[to]++;
 
-       emit Transfer(address(0),to,tokenId); 
+       emit Transfer(address(0),to,tokenId);
    }
 }
