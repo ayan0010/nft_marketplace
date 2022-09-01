@@ -16,7 +16,7 @@ contract KryptoBird is ERC721Connector {
         // this is deprecated - uint _id = KryptoBirdz.push(_kryptoBird);
         kryptoBirdz.push(_kryptoBird);
         uint _id = kryptoBirdz.length - 1;
-
+        
         // .push no longer returns the length but a ref to the added element
         _mint(msg.sender, _id);
 

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 import './ERC721Metadata.sol';
-import './ERC721.sol';
-contract ERC721Connector is ERC721Metadata,ERC721  {
+import './ERC721Enumerable.sol';
+contract ERC721Connector is ERC721Metadata,ERC721Enumerable{
     // we deploy connector right away
     // we want to carry the metadata info over 
 
