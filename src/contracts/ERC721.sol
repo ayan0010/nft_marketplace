@@ -16,14 +16,13 @@ contract ERC721{
     */
  mapping(uint256 => address) private _tokenOwner;
  mapping(address => uint256) private _OwnedTokensCount;
+ mapping(uint256=>address) private _tokenApprovals;
 
-   
-
-    /// @notice Count all NFTs assigned to an owner
-    /// @dev NFTs assigned to the zero address are considered invalid, and this
-    ///  function throws for queries about the zero address.
-    /// @param _owner An address for whom to query the balance
-    /// @return The number of NFTs owned by `_owner`, possibly zero
+   //  / @notice Count all NFTs assigned to an owner
+   //  / @dev NFTs assigned to the zero address are considered invalid, and this
+   //  /  function throws for queries about the zero address.
+   //  / @param _owner An address for whom to query the balance
+   //  / @return The number of NFTs owned by `_owner`, possibly zero
 
  
  function balanceOf(address _owner) public view returns (uint256){
@@ -31,13 +30,13 @@ contract ERC721{
      return _OwnedTokensCount[_owner];
  }
 
-    /// @notice Find the owner of an NFT
-    /// @dev NFTs assigned to zero address are considered invalid, and queries
-    ///  about them do throw.
-    /// @param _tokenId The identifier for an NFT
-    /// @return The address of the owner of the NFT
+   //  / @notice Find the owner of an NFT
+   //  / @dev NFTs assigned to zero address are considered invalid, and queries
+   //  /  about them do throw.
+   //  / @param _tokenId The identifier for an NFT
+   //  / @return The address of the owner of the NFT
 
-   function ownerOf(uint256 _tokenId) external view returns (address){
+   function ownerOf(uint256 _tokenId) public view returns (address){
       address owner=_tokenOwner[_tokenId];
       require(owner != address(0),'Owner query for non-existent token');
       return owner;
@@ -57,7 +56,39 @@ contract ERC721{
     //who owns which token 
         _tokenOwner[tokenId] = to;
         _OwnedTokensCount[to]++;
-
-       emit Transfer(address(0),to,tokenId);
+        emit Transfer(address(0),to,tokenId);
    }
+
+   // / @notice Transfer ownership of an NFT -- THE CALLER IS RESPONSIBLE
+   //  /  TO CONFIRM THAT `_to` IS CAPABLE OF RECEIVING NFTS OR ELSE
+   //  /  THEY MAY BE PERMANENTLY LOST
+   //  / @dev Throws unless `msg.sender` is the current owner, an authorized
+   //  /  operator, or the approved address for this NFT. Throws if `_from` is
+   //  /  not the current owner. Throws if `_to` is the zero address. Throws if
+   //  /  `_tokenId` is not a valid NFT.
+   //  / @param _from The current owner of the NFT
+   //  / @param _to The new owner
+   //  / @param _tokenId The NFT to transfer
+    function _transferFrom(address _from, address _to, uint256 _tokenId) internal{
+      // Exercise -
+      //  1.add the token id to the address recieving the token
+      //  2.update the balance of the address _from token
+      //  3.update the balance of the address _to
+      //  4.add the safe functionality 
+      //  5.require that the address receiving a token is not a zero address
+      //  6.require the address transfering the token actually owns the token
+       
+       require(_to!=address(0),"Error - ERC721 Transfer to the zero address");
+       require(ownerOf(_tokenId)==_from,"Error - Trying to transfer a token the address doest not own");
+       _OwnedTokensCount[_from]-=1;
+       _OwnedTokensCount[_to]++;
+       _tokenOwner[_tokenId]=_to;
+       emit Transfer (_from,_to,_tokenId);
+    }
+
+    function transferFrom(address _from, address _to, uint256 _tokenId) public{
+         _transferFrom(_from,_to,_tokenId);
+    }
+    
+
 }
