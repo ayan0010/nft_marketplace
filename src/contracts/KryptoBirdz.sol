@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import './ERC721Connector.sol';
+
 contract KryptoBird is ERC721Connector {
 
     // array to store our nfts
@@ -16,7 +17,7 @@ contract KryptoBird is ERC721Connector {
         // this is deprecated - uint _id = KryptoBirdz.push(_kryptoBird);
         kryptoBirdz.push(_kryptoBird);
         uint _id = kryptoBirdz.length - 1;
-        
+
         // .push no longer returns the length but a ref to the added element
         _mint(msg.sender, _id);
 
@@ -28,5 +29,4 @@ contract KryptoBird is ERC721Connector {
  {}
 
 }
-
 

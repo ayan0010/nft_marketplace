@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract ERC721{
-    event Transfer (address indexed from, address indexed to, uint256 indexed tokenId);
+import './ERC165.sol';
+import './interfaces/IERC721.sol';
+
+
+  contract ERC721 is ERC165,IERC721 {
+  
     /*
              steps to building out the minting function-
         a. nfts to point an address
@@ -24,8 +28,24 @@ contract ERC721{
    //  / @param _owner An address for whom to query the balance
    //  / @return The number of NFTs owned by `_owner`, possibly zero
 
- 
- function balanceOf(address _owner) public view returns (uint256){
+
+       //1.Register the interdace for ERC721 contract so that it includes the follwing functions : balanceOf,ownerOf,transferFrom
+       // by register the interface :write the constructors with the according byte conversions
+
+       //2. Register the interface for ERC721Enumerable contract so that it includes totalSupply,
+       //tokenByIndex,tokenOfOwnerByIndex fxns
+
+        //3. Register the interdace for the ER721MEtadata contract so that it includes name and symbol fxns
+  
+
+  
+ constructor(){
+    _registerInterface(bytes4(keccak256('balanceOf(bytes4)')^
+    keccak256('ownerOf(bytes4)')^
+    keccak256('transferFrom(bytes4)')));
+  }
+
+ function balanceOf(address _owner) public view override returns (uint256){
      require(_owner != address(0),'Owner query for non-existent token');
      return _OwnedTokensCount[_owner];
  }
@@ -36,7 +56,7 @@ contract ERC721{
    //  / @param _tokenId The identifier for an NFT
    //  / @return The address of the owner of the NFT
 
-   function ownerOf(uint256 _tokenId) public view returns (address){
+   function ownerOf(uint256 _tokenId) public view override returns (address){
       address owner=_tokenOwner[_tokenId];
       require(owner != address(0),'Owner query for non-existent token');
       return owner;
@@ -86,7 +106,7 @@ contract ERC721{
        emit Transfer (_from,_to,_tokenId);
     }
 
-    function transferFrom(address _from, address _to, uint256 _tokenId) public{
+    function transferFrom(address _from, address _to, uint256 _tokenId) override public{
          _transferFrom(_from,_to,_tokenId);
     }
     
